@@ -1,0 +1,35 @@
+body {
+  background-color: rgb(255,110,64);
+}
+
+.mdl-layout__content{
+  width: 100%;
+  position: relative;
+}
+
+.post {
+  background: #fff;
+  width: 90%;
+  margin: 10px auto;
+}
+
+.post-username {
+  font-weight: bold;
+}
+
+.mdl-card__media {
+  background-color: inherit;
+}
+
+.post-image {
+  display: block;
+  margin: 0 auto;
+}
+
+#file-input {
+  display: none;
+}
+
+#upload-image {
+  cursor: pointer;
+}

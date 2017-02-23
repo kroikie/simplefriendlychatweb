@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Friendly Pix</title>
+    <link rel="stylesheet" href="css/icon.css">
+    <link rel="stylesheet" href="css/material.amber-deep_orange.min.css">
+    <script defer src="js/material.min.js"></script>
+    <link rel="stylesheet" href="css/dialog-polyfill.css">
+    <script defer src="js/dialog-polyfill.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <span class="mdl-layout-title">Friendly Pix</span>
+          <div class="mdl-layout-spacer"></div>
+          <input id="file-input" type="file">
+          <i id="upload-image" class="material-icons" onclick="postImage()">file_upload</i>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+      </main>
+    </div>
+    <dialog id="sign-up-dialog" class="mdl-dialog">
+      <h4 class="mdl-dialog__title">Sign In To Post</h4>
+      <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button signin">Sign In</button>
+        <button type="button" class="mdl-button close">Cancel</button>
+      </div>
+    </dialog>
+    <template id="postTemplate">
+      <div class="mdl-card post">
+        <div class="post-username mdl-card__title">
+          <h2 class="mdl-card__title-text"></h2>
+        </div>
+        <div class="mdl-card__media">
+         <img class="post-image">
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a>View Details</a>
+        </div>
+      </div>
+    </template>
+    <script src="js/firebase.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

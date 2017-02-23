@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Friendly Pix Details</title>
+    <link rel="stylesheet" href="css/icon.css">
+    <link rel="stylesheet" href="css/material.amber-deep_orange.min.css">
+    <script src="js/material.min.js"></script>
+    <link rel="stylesheet" href="css/dialog-polyfill.css">
+    <script defer src="js/dialog-polyfill.js"></script>
+    <link rel="stylesheet" href="css/details.css">
+  </head>
+  <body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <span class="mdl-layout-title">Friendly Pix Details</span>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <div id="post" class="mdl-card">
+          <div class="mdl-card__title">
+            <h2 id="post-username" class="mdl-card__title-text"></h2>
+          </div>
+          <div class="mdl-card__media">
+            <img id="post-image">
+          </div>
+          <div class="mdl-card__actions mdl-card--border">
+            <i id="post-like" class="material-icons hidden">favorite_border</i>
+            <i id="post-unlike" class="material-icons hidden">favorite</i><br>
+            <textarea id="post-comment-text"></textarea><br>
+            <i id="post-comment" class="material-icons">comment</i>
+          </div>
+        </div>
+        <div id="comments"></div>
+      </main>
+    </div>
+    <dialog id="sign-up-dialog" class="mdl-dialog">
+      <h4 class="mdl-dialog__title">Sign In To Perform Action</h4>
+      <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button signin">Sign In</button>
+        <button type="button" class="mdl-button close">Cancel</button>
+      </div>
+    </dialog>
+    <template id="commentTemplate">
+      <div class="comment mdl-shadow--2dp">
+        <div class="mdl-card__title">
+          <h2 class="mdl-card__title-text comment-username"></h2>
+        </div>
+        <div class="mdl-card__supporting-text comment-content"></div>
+      </div>
+    </template>
+    <script src="js/firebase.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/details.js"></script>
+  </body>
+</html>

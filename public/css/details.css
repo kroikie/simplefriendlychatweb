@@ -1,0 +1,41 @@
+body {
+  background-color: rgb(255,110,64);
+}
+
+#post {
+    background-color: #fff;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.mdl-card__media {
+  background-color: inherit;
+}
+
+
+#post-image {
+    display: block;
+    margin: 0 auto;
+}
+
+#post-like.hidden, #post-unlike.hidden {
+    display: none;
+}
+
+.mdl-card__actions i {
+    cursor: pointer;
+}
+
+#post-comment {
+    float: right;
+}
+
+#post-comment-text {
+    width: 100%;
+}
+
+.comment {
+    background-color: #fff;
+    width: 80%;
+    margin: 5px auto;
+}
