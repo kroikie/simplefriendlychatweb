@@ -1,8 +1,12 @@
+//Retrieve the container for all of the posts
 var pageContent = document.querySelector(".mdl-layout__content");
+//Get the template for a post
 var template =  document.querySelector("#postTemplate");
 
+//Make a copy of the post template and populate it with data
 function createPostNode(postId, post){
-  var clone = document.importNode(template.content, true);
+  //var clone = document.importNode(template.content, true); //Faster in Firefox
+  var clone = template.content.cloneNode(true); //Faster in Chrome
   var postUsername =  clone.querySelector('.post-username');
   postUsername.innerHTML = post.author;
   var postImage = clone.querySelector('.post-image');
@@ -12,6 +16,7 @@ function createPostNode(postId, post){
   return clone;
 }
 
+//Listen for the changes in the user authentication state
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
 		// User is signed in.
@@ -20,23 +25,40 @@ firebase.auth().onAuthStateChanged(function(user) {
     var uid = user.uid;
     //console.log(user);
 		
-    //Get a list of the posts
+    //Get a referencs to the posts in the database
 		var postsRef = firebase.database().ref('posts');
     pageContent.innerHTML = "";
+    //Get the data each time a child is added to the database for this reference
     postsRef.on('child_added', function(snapshot){
       //console.log(snapshot.val());
       var key = snapshot.key;
       var post = snapshot.val();
       pageContent.appendChild(createPostNode(key, post));
     });
+
+    if(!isAnonymous){
+      //Enable Sign out
+      var signOut = document.querySelector('#sign-out');
+      signOut.classList.remove('hidden');
+      signOut.addEventListener('click', function(event){
+        firebase.auth().signOut().then(function(){
+          signOut.classList.add('hidden');
+          console.log('Signed Out');
+        }, function(error){
+          console.log('Sign Out Error', error);
+        });
+      });
+    }
 	} else {
 		console.log("Not logged in");
+    //Sign in user since the authentication is required to access database
 		firebase.auth().signInAnonymously().catch(function(error){
 			console.log(error);
 		});
 	}
 });
 
+//Get the file input and listen for changes which signals that the user has submitted 
 var fileInput = document.querySelector("#file-input");
 fileInput.onchange = function(event){
   var user = firebase.auth().currentUser;
@@ -48,7 +70,7 @@ fileInput.onchange = function(event){
   
   //Validate that the files is an image
   if(!file.type.startsWith('image')) return;
-  // Create the file metadata
+  // Create the file metadata object
   var metadata = {
       contentType: file.type,
   };
@@ -82,7 +104,9 @@ fileInput.onchange = function(event){
       // Handle successful uploads on complete
       // For instance, get the download URL: https://firebasestorage.googleapis.com/...
       var downloadURL = uploadTask.snapshot.downloadURL;
+      //Get reference to the posts in database
       var postsRef = firebase.database().ref('posts');
+      //Create a new post in the database
       postsRef.push({
         author: user.displayName,
         userId: user.uid,
@@ -92,18 +116,20 @@ fileInput.onchange = function(event){
   });
 };
 
-
+//Show a dialog to the user to sign in
 function promptForSignIn(){
   var dialog = document.querySelector('#sign-up-dialog');
   if (!dialog.showModal) {
+    //Dialog is not supported in the browser so polyfill it
     dialogPolyfill.registerDialog(dialog);
   }
-  dialog.querySelector('.signin').addEventListener('click', function(event){
+  var signIn = dialog.querySelector('.signin');
+  signIn.addEventListener('click', function(event){
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider).then(function(result) {
       // This gives you a Google Access Token. You can use it to access the Google API.
       var token = result.credential.accessToken;
-      // The signed-in user info.
+      // The signed in user info.
       var googleUser = result.user;
       //Get the reference for this user in the database
       var userRef = firebase.database().ref('users').child(uid);
@@ -137,10 +163,12 @@ function promptForSignIn(){
   dialog.showModal();
 }
 
+//Post a new image
 function postImage(){
   var user = firebase.auth().currentUser;
   if(!user) return;
   if(user.isAnonymous) {
+    //User is anonymous so get them to sign in using Google
     promptForSignIn();
     return;
   }

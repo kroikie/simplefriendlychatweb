@@ -2,6 +2,10 @@ body {
   background-color: rgb(255,110,64);
 }
 
+#sign-out.hidden {
+  display: none;
+}
+
 #post {
     background-color: #fff;
     width: 80%;
@@ -11,7 +15,6 @@ body {
 .mdl-card__media {
   background-color: inherit;
 }
-
 
 #post-image {
     display: block;

@@ -1,8 +1,10 @@
 var commentSection = document.querySelector("#comments");
-var template =  document.querySelector("#commentTemplate");
+var template = document.querySelector("#commentTemplate");
 
+//Make a copy of the comment template and populate it with data
 function createCommentNode(comment){
-  var clone = document.importNode(template.content, true);
+  //var clone = document.importNode(template.content, true); //Faster in Firefox
+  var clone = template.content.cloneNode(true); //Faster in Chrome
   var commentUsername =  clone.querySelector('.comment-username');
   commentUsername.innerHTML = comment.author;
   var commentContent = clone.querySelector('.comment-content');
@@ -55,15 +57,20 @@ function promptForSignIn(){
   dialog.showModal();
 }
 
+//Set up the page for a user
 function userLoggedIn(user){
+  //Get the id for the file from the url
   var queryString = window.location.search.substr(1);
   var queryParts = queryString.split('=');
   var postId = queryParts[1];
+
+  //Get a database reference to the post
   var postRef = firebase.database().ref('posts').child(postId);
+  //Retrieve the value from the reference
   postRef.once('value', function(snapshot){
     var post = snapshot.val();
     var postHTML = document.querySelector('#post')
-    var postUsername =  postHTML.querySelector('#post-username');
+    var postUsername = postHTML.querySelector('#post-username');
     postUsername.innerHTML = post.author;
     var postImage = postHTML.querySelector('#post-image');
     postImage.src = post.image_url;
@@ -72,6 +79,7 @@ function userLoggedIn(user){
     var postLikeRef = firebase.database().ref('likes').child(postId).child(user.uid);
     postLikeRef.on('value', function(snapshot){
       var liked = snapshot.val();
+      //The user hasn't liked or they have disliked
       if(liked === null || !liked) {
         postLike.classList.remove('hidden');
         postUnlike.classList.add('hidden');
@@ -112,14 +120,30 @@ function userLoggedIn(user){
       postCommentText.value = "";
     });
   });
-  
+
+  var isAnonymous = user.isAnonymous;
+  if(!isAnonymous){
+      //Enable Sign out
+      var signOut = document.querySelector('#sign-out');
+      signOut.classList.remove('hidden');
+      signOut.addEventListener('click', function(event){
+        firebase.auth().signOut().then(function(){
+          signOut.classList.add('hidden');
+          console.log('Signed Out');
+        }, function(error){
+          console.log('Sign Out Error', error);
+        });
+      });
+    }
 }
 
+//Listen for the changes in the user authentication state
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
     userLoggedIn(user);
 	} else {
 		console.log("Not logged in");
+    //Sign in user since the authentication is required to access database
 		firebase.auth().signInAnonymously().catch(function(error){
 			console.log(error);
 		});
