@@ -1,10 +1,13 @@
-var commentSection = document.querySelector("#comments");
-var template = document.querySelector("#commentTemplate");
+//Retrieve the container for the post informaiton
+var postHTML = document.querySelector('#post');
+//Retrieve the container for all of the comments
+var commentSection = document.querySelector('#comments');
+//Get the template for a comment
+var template = document.querySelector('#commentTemplate');
 
 //Make a copy of the comment template and populate it with data
 function createCommentNode(comment){
-  //var clone = document.importNode(template.content, true); //Faster in Firefox
-  var clone = template.content.cloneNode(true); //Faster in Chrome
+  var clone = template.content.cloneNode(true);
   var commentUsername =  clone.querySelector('.comment-username');
   commentUsername.innerHTML = comment.author;
   var commentContent = clone.querySelector('.comment-content');
@@ -69,7 +72,6 @@ function userLoggedIn(user){
   //Retrieve the value from the reference
   postRef.once('value', function(snapshot){
     var post = snapshot.val();
-    var postHTML = document.querySelector('#post')
     var postUsername = postHTML.querySelector('#post-username');
     postUsername.innerHTML = post.author;
     var postImage = postHTML.querySelector('#post-image');
@@ -96,7 +98,7 @@ function userLoggedIn(user){
       if(user.isAnonymous) promptForSignIn();
       else postLikeRef.set(false);
     });
-    var postCommentText = postHTML.querySelector("#post-comment-text");
+    var postCommentText = postHTML.querySelector('#post-comment-text');
     var postComment = postHTML.querySelector('#post-comment');
     commentSection.innerHTML = "";
     var postCommentsRef = firebase.database().ref('comments').child(postId);
@@ -121,8 +123,7 @@ function userLoggedIn(user){
     });
   });
 
-  var isAnonymous = user.isAnonymous;
-  if(!isAnonymous){
+  if(!user.isAnonymous){
       //Enable Sign out
       var signOut = document.querySelector('#sign-out');
       signOut.classList.remove('hidden');
@@ -142,7 +143,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
     userLoggedIn(user);
 	} else {
-		console.log("Not logged in");
+		console.log('Not logged in');
     //Sign in user since the authentication is required to access database
 		firebase.auth().signInAnonymously().catch(function(error){
 			console.log(error);

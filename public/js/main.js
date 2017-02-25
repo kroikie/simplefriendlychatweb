@@ -1,12 +1,11 @@
 //Retrieve the container for all of the posts
-var pageContent = document.querySelector(".mdl-layout__content");
+var posts = document.querySelector('#posts');
 //Get the template for a post
-var template =  document.querySelector("#postTemplate");
+var template =  document.querySelector('#postTemplate');
 
 //Make a copy of the post template and populate it with data
 function createPostNode(postId, post){
-  //var clone = document.importNode(template.content, true); //Faster in Firefox
-  var clone = template.content.cloneNode(true); //Faster in Chrome
+  var clone = template.content.cloneNode(true);
   var postUsername =  clone.querySelector('.post-username');
   postUsername.innerHTML = post.author;
   var postImage = clone.querySelector('.post-image');
@@ -20,20 +19,19 @@ function createPostNode(postId, post){
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
 		// User is signed in.
-    console.log(user)
+    //console.log(user)
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
-    //console.log(user);
 		
     //Get a referencs to the posts in the database
 		var postsRef = firebase.database().ref('posts');
-    pageContent.innerHTML = "";
+    posts.innerHTML = "";
     //Get the data each time a child is added to the database for this reference
     postsRef.on('child_added', function(snapshot){
       //console.log(snapshot.val());
       var key = snapshot.key;
       var post = snapshot.val();
-      pageContent.appendChild(createPostNode(key, post));
+      posts.appendChild(createPostNode(key, post));
     });
 
     if(!isAnonymous){
@@ -50,7 +48,7 @@ firebase.auth().onAuthStateChanged(function(user) {
       });
     }
 	} else {
-		console.log("Not logged in");
+		console.log('Not logged in');
     //Sign in user since the authentication is required to access database
 		firebase.auth().signInAnonymously().catch(function(error){
 			console.log(error);
@@ -59,7 +57,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 //Get the file input and listen for changes which signals that the user has submitted 
-var fileInput = document.querySelector("#file-input");
+var fileInput = document.querySelector('#file-input');
 fileInput.onchange = function(event){
   var user = firebase.auth().currentUser;
 
