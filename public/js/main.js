@@ -76,7 +76,10 @@ fileInput.onchange = function(event){
   };
   
   // Get a reference to a location to upload the file
-  var storageRef = firebase.storage().ref(user.uid + '/image.png');
+  var timestamp = new Date().getTime();
+  var fileNameParts = file.name.split('.');
+  var extension = fileNameParts[fileNameParts.length - 1];
+  var storageRef = firebase.storage().ref(user.uid + '/timestamp.' + extension);
   
   // Start the file upload
   var uploadTask = storageRef.put(file, metadata);
