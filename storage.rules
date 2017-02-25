@@ -1,0 +1,7 @@
+service firebase.storage {
+  match /b/friendly-pix-20031.appspot.com/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
